@@ -7,6 +7,12 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import { getImages } from './js/pixabay-api';
 import { renderImages } from './js/render-functions';
 
+let query;
+let currentPage = 1;
+let maxPage = 0;
+const pageSize = 15;
+
+
 const form = document.querySelector('.search-form');
 const list = document.querySelector('.list');
 const load = document.querySelector('.loader');
@@ -17,8 +23,13 @@ form.addEventListener('submit', handleImages);
 
 async function handleImages(event) {
     event.preventDefault();
-    load.classList.add('loader');
     const input = event.target.elements.search.value.trim();
+    list.innerHTML = "";
+    currentPage = 1;
+    showLoader();
+  const data = await getImages(query, currentPage);
+  
+    
     if (input === '') {
       iziToast.error({
         backgroundColor: 'lightred',
@@ -32,6 +43,7 @@ async function handleImages(event) {
     }
     try {
     const value = await getImages(input)
+    showLoader ();
         if (value.hits && value.hits.length === 0) {
           iziToast.error({
             backgroundColor: 'red',
@@ -47,6 +59,7 @@ async function handleImages(event) {
         list.innerHTML = markup;
         const lightbox = new SimpleLightbox('.gallery-link', {
           captionsData: 'alt',
+          captionDelay: 250,
         });
         lightbox.refresh();
       
@@ -61,13 +74,56 @@ async function handleImages(event) {
           message:
             'Sorry, an error occurred while fetching images. Please try again!',
         });
+        hideLoader();
       }
       //.finally(() => load.classList.remove('loader'));
     //event.target.reset();
+    
   }
+btnLoadMore.addEventListener('click', onLoadMoreClick);
+
+maxPage = Math.ceil(data.totalResult / pageSize);
+
+async function onLoadMoreClick(){
+currentPage += 1;
+showLoader();
+try{
+const data = await getImages(query, currentPage);
+renderImages(data);
+if (currentPage >= maxPage) {
+  hideLoadMore();
+  iziToast.show({
+    color: 'green',
+    message: `Sorry, you have reached the end of collection.`,
+    position: 'topCenter',
+    timeout: 1000,
+  });
+}
+} catch (err) {
+console.log(err);
+}
+
+hideLoader();
+checkBtnStatus();
+}
+//hideLoader();
+//hideLoadMore();
 function showLoadMore() {
   btnLoadMore.classList.remove('hidden');
 }
 function hideLoadMore() {
-  btnLoadMore.classList.add('hidden')
+  btnLoadMore.classList.add('hidden');
+}
+function showLoader () {
+  load.classList.remove('hidden');
+}
+function hideLoader () {
+  load.classList.add('hidden');
+}
+function checkBtnStatus() {
+  if (currentPage >= maxPage) {
+    hideLoadMore();
+  } else {
+    showLoadMore();
+  }
 }

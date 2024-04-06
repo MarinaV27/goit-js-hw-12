@@ -1,19 +1,19 @@
 import axios from 'axios';
-
-import { getImages } from './js/pixabay-api';
-import { renderImages } from './js/render-functions';
-
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+
+import { getImages } from './js/pixabay-api';
+import { renderImages } from './js/render-functions';
 
 const form = document.querySelector('.search-form');
 const list = document.querySelector('.list');
 const load = document.querySelector('.loader');
 form.addEventListener('submit', handleImages);
 
-function handleImages(event) {
+
+async function handleImages(event) {
     event.preventDefault();
     load.classList.add('loader');
     const input = event.target.elements.search.value.trim();
@@ -28,9 +28,8 @@ function handleImages(event) {
       });
       return;
     }
-  
-    getImages(input)
-      .then(value => {
+    try {
+    const value = await getImages(input)
         if (value.hits && value.hits.length === 0) {
           iziToast.error({
             backgroundColor: 'red',
@@ -48,8 +47,8 @@ function handleImages(event) {
           captionsData: 'alt',
         });
         lightbox.refresh();
-      })
-      .catch(error => {
+      
+      } catch (error) {
         console.error('Error occurred while fetching images:', error);
         iziToast.error({
           backgroundColor: 'red',
@@ -60,7 +59,8 @@ function handleImages(event) {
           message:
             'Sorry, an error occurred while fetching images. Please try again!',
         });
-      })
-      .finally(() => load.classList.remove('loader'));
-    event.target.reset();
+      }
+      //.finally(() => load.classList.remove('loader'));
+    //event.target.reset();
   }
+

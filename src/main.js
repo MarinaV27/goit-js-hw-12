@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { getImages } from './js/pixabay-api';
 import { renderImages } from './js/render-functions';
 

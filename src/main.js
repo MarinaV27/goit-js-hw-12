@@ -10,6 +10,8 @@ import { renderImages } from './js/render-functions';
 const form = document.querySelector('.search-form');
 const list = document.querySelector('.list');
 const load = document.querySelector('.loader');
+const btnLoadMore = document.querySelector('.btn-load-more');
+
 form.addEventListener('submit', handleImages);
 
 
@@ -63,4 +65,9 @@ async function handleImages(event) {
       //.finally(() => load.classList.remove('loader'));
     //event.target.reset();
   }
-
+function showLoadMore() {
+  btnLoadMore.classList.remove('hidden');
+}
+function hideLoadMore() {
+  btnLoadMore.classList.add('hidden')
+}

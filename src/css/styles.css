@@ -133,7 +133,7 @@ input:active, input:hover {
   top: 50%;
 }
 
-.is-hidden {
+.hidden {
   opacity: 0;
   visibility: hidden;
 }

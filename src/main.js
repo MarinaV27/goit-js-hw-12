@@ -18,13 +18,13 @@ const list = document.querySelector('.list');
 const load = document.querySelector('.loader');
 const btnLoadMore = document.querySelector('.btn-load-more');
 
-form.addEventListener('submit', handleImages);
 
+form.addEventListener('submit', handleImages);
 
 async function handleImages(event) {
     event.preventDefault();
     const input = event.target.elements.search.value.trim();
-    //list.innerHTML = "";
+    list.innerHTML = "";
     currentPage = 1;
     showLoader();
   const data = await getImages(query, currentPage);
@@ -81,20 +81,22 @@ async function handleImages(event) {
     event.target.reset();
     showLoadMore()
   }
+
+
 btnLoadMore.addEventListener('click', onLoadMoreClick);
 
 async function onLoadMoreClick(){
   currentPage += 1;
 showLoader();
 try{
-
 const data = await getImages(query, currentPage);
+list.insertAdjacentHTML('beforeend', renderImages(data.hits));
 renderImages(data.hits);
 if (currentPage >= maxPage) {
   hideLoadMore();
   iziToast.show({
     color: 'green',
-    message: `Sorry, you have reached the end of collection.`,
+    message: `We're sorry, but you've reached the end of search results.`,
     position: 'topCenter',
     timeout: 1000,
   });
@@ -126,4 +128,12 @@ function checkBtnStatus() {
   } else {
     showLoadMore();
   }
+}
+function myScroll() {
+  const height = (form.firstChild.getBoundingClientRect().height) * 2;
+
+  window.scrollBy({
+      top: height ,
+      behavior: 'smooth',
+  });
 }

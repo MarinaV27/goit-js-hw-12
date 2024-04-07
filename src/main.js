@@ -57,7 +57,6 @@ async function handleImages(event) {
               'Sorry, there are no images matching your search query. Please try again!',
           });
         }
-  
         const markup = renderImages(data.hits);
         list.innerHTML = markup;
         const lightbox = new SimpleLightbox('.gallery-link', {
@@ -106,7 +105,7 @@ if (currentPage >= maxPage) {
 } catch (err) {
 console.log(err);
 }
-
+myScroll();
 hideLoader();
 checkBtnStatus();
 }
@@ -132,10 +131,10 @@ function checkBtnStatus() {
   }
 }
 function myScroll() {
-  const height = (form.firstChild.getBoundingClientRect().height) * 2;
+  const height = (list.firstChild.getBoundingClientRect().height);
 
   window.scrollBy({
-      top: height ,
+      top: height*2 ,
       behavior: 'smooth',
   });
 }

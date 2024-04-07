@@ -24,11 +24,12 @@ form.addEventListener('submit', handleImages);
 async function handleImages(event) {
     event.preventDefault();
     const input = event.target.elements.search.value.trim();
-    list.innerHTML = "";
+    //list.innerHTML = "";
     currentPage = 1;
     showLoader();
   const data = await getImages(query, currentPage);
-  
+  maxPage = Math.ceil(data.totalHits / pageSize);
+  renderImages(data.hits);
     
     if (input === '') {
       iziToast.error({
@@ -77,19 +78,18 @@ async function handleImages(event) {
         hideLoader();
       }
       //.finally(() => load.classList.remove('loader'));
-    //event.target.reset();
-    
+    event.target.reset();
+    showLoadMore()
   }
 btnLoadMore.addEventListener('click', onLoadMoreClick);
 
-maxPage = Math.ceil(data.totalResult / pageSize);
-
 async function onLoadMoreClick(){
-currentPage += 1;
+  currentPage += 1;
 showLoader();
 try{
+
 const data = await getImages(query, currentPage);
-renderImages(data);
+renderImages(data.hits);
 if (currentPage >= maxPage) {
   hideLoadMore();
   iziToast.show({

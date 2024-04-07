@@ -23,7 +23,7 @@ form.addEventListener('submit', handleImages);
 
 async function handleImages(event) {
     event.preventDefault();
-    const input = event.target.elements.search.value.trim();
+    query = event.target.elements.search.value.trim();
     list.innerHTML = "";
     currentPage = 1;
     showLoader();
@@ -31,7 +31,7 @@ async function handleImages(event) {
   maxPage = Math.ceil(data.totalHits / pageSize);
   renderImages(data.hits);
     
-    if (input === '') {
+    if (query === '') {
       iziToast.error({
         backgroundColor: 'lightred',
         icon: false,
@@ -43,9 +43,11 @@ async function handleImages(event) {
       return;
     }
     try {
-    const value = await getImages(input)
+      const data = await getImages(query, currentPage);
+      maxPage = Math.ceil(data.totalHits / pageSize);
+      renderImages(data.hits);
     showLoader ();
-        if (value.hits && value.hits.length === 0) {
+        if (data.hits && data.hits.length === 0) {
           iziToast.error({
             backgroundColor: 'red',
             progressBar: false,
@@ -56,7 +58,7 @@ async function handleImages(event) {
           });
         }
   
-        const markup = renderImages(value.hits);
+        const markup = renderImages(data.hits);
         list.innerHTML = markup;
         const lightbox = new SimpleLightbox('.gallery-link', {
           captionsData: 'alt',
@@ -75,11 +77,11 @@ async function handleImages(event) {
           message:
             'Sorry, an error occurred while fetching images. Please try again!',
         });
-        hideLoader();
+        hideLoader(); 
       }
-      //.finally(() => load.classList.remove('loader'));
+    
     event.target.reset();
-    showLoadMore()
+    checkBtnStatus()
   }
 
 

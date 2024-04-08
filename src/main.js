@@ -27,7 +27,6 @@ async function handleImages(event) {
     list.innerHTML = "";
     currentPage = 1;
     showLoader();
-    
     if (query === '') {
       iziToast.error({
         backgroundColor: 'lightred',
@@ -76,7 +75,7 @@ async function handleImages(event) {
       }
     hideLoader(); 
     event.target.reset();
-    checkBtnStatus()
+    checkBtnStatus();
   }
 
 
@@ -89,7 +88,7 @@ try{
 const data = await getImages(query, currentPage);
 list.insertAdjacentHTML('beforeend', renderImages(data.hits));
 if (currentPage >= maxPage) {
-  hideLoadMore();
+ // hideLoadMore();
   iziToast.show({
     color: 'green',
     message: `We're sorry, but you've reached the end of search results.`,

@@ -27,9 +27,6 @@ async function handleImages(event) {
     list.innerHTML = "";
     currentPage = 1;
     showLoader();
-  const data = await getImages(query, currentPage);
-  maxPage = Math.ceil(data.totalHits / pageSize);
-  renderImages(data.hits);
     
     if (query === '') {
       iziToast.error({
@@ -76,9 +73,8 @@ async function handleImages(event) {
           message:
             'Sorry, an error occurred while fetching images. Please try again!',
         });
-        hideLoader(); 
       }
-    
+    hideLoader(); 
     event.target.reset();
     checkBtnStatus()
   }
@@ -92,7 +88,6 @@ showLoader();
 try{
 const data = await getImages(query, currentPage);
 list.insertAdjacentHTML('beforeend', renderImages(data.hits));
-renderImages(data.hits);
 if (currentPage >= maxPage) {
   hideLoadMore();
   iziToast.show({

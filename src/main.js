@@ -88,7 +88,6 @@ try{
 const data = await getImages(query, currentPage);
 list.insertAdjacentHTML('beforeend', renderImages(data.hits));
 if (currentPage >= maxPage) {
- // hideLoadMore();
   iziToast.show({
     color: 'green',
     message: `We're sorry, but you've reached the end of search results.`,
@@ -99,6 +98,7 @@ if (currentPage >= maxPage) {
 } catch (err) {
 console.log(err);
 }
+hideLoadMore();
 myScroll();
 hideLoader();
 checkBtnStatus();
